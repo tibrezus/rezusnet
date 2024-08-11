@@ -1,0 +1,13 @@
+# certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: mgmt-rezus-net-tls
+spec:
+  secretName: mgmt-rezus-net-tls
+  issuerRef:
+    name: letsencrypt-mgmt
+    kind: ClusterIssuer
+  commonName: mgmt.rezus.net
+  dnsNames:
+  - mgmt.rezus.net
