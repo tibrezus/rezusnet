@@ -1,0 +1,10 @@
+args:
+  - "--registry=index.docker.io"
+  - "--registry=quay.io"
+  - "--registry=ghcr.io"
+  - "--registry=xpkg.upbound.io"
+
+replicas: 2
+
+image:
+  pullPolicy: Always
