@@ -4,10 +4,10 @@ persist: true
 # Provides machine specific configuration options.
 machine:
     type: worker # Defines the role of the machine within the cluster.
-    token: z3vdd6.ozkn0k9bufq12eci # The `token` is used by a machine to join the PKI of the cluster.
+    token: l8txnk.cowrdep1nzfhh7b8 # The `token` is used by a machine to join the PKI of the cluster.
     # The root certificate authority of the PKI.
     ca:
-        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQekNCOHFBREFnRUNBaEVBODQwdy9JanN3WXpSdGRNYTR2RWVoVEFGQmdNclpYQXdFREVPTUF3R0ExVUUKQ2hNRmRHRnNiM013SGhjTk1qUXdPVEF4TWpBeE1UUTNXaGNOTXpRd09ETXdNakF4TVRRM1dqQVFNUTR3REFZRApWUVFLRXdWMFlXeHZjekFxTUFVR0F5dGxjQU1oQVB5K0lzRTVzNUM0N2hIQUh4YTZqejJ4L3hmb2czVkhoK0lJClIvNi93OGsvbzJFd1h6QU9CZ05WSFE4QkFmOEVCQU1DQW9Rd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSEF3RUcKQ0NzR0FRVUZCd01DTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkhVZjYyOWZoMVpZUGdzMApWSzA4NDJkOUhIMnRNQVVHQXl0bGNBTkJBRGU5a2FSVEJjTXVyNnRWSjREcWg5Y1ZrMnNtSldUVzNSeE9IQjgyCkdxK3VaMmxadWdHYldwK3ZIeVR1WlA0K0J3ZFpadURvTFJqVDBoTC9Kams3UWdnPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQekNCOHFBREFnRUNBaEVBa04xWjBoV1JNRzNCeC9tUFFEOXNzREFGQmdNclpYQXdFREVPTUF3R0ExVUUKQ2hNRmRHRnNiM013SGhjTk1qUXdPVEUwTVRjeE5ESXpXaGNOTXpRd09URXlNVGN4TkRJeldqQVFNUTR3REFZRApWUVFLRXdWMFlXeHZjekFxTUFVR0F5dGxjQU1oQUp5ZlVYTDdzMzBndGQxVTltUnpxVmxBaGtuaXUvRVRKN2t1Ci9VaEtJZWRObzJFd1h6QU9CZ05WSFE4QkFmOEVCQU1DQW9Rd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSEF3RUcKQ0NzR0FRVUZCd01DTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkpxRUYyMmMxSFZGZ2dSOQpDdVpodldERnowVjdNQVVHQXl0bGNBTkJBSG0vZlV1ZHFjWERrcm1xaVByeFNINytiRndRNmx5Mjl4ZW82M3IvCkpHUEhqdXFzWDdXR3NxOUJ6YkVRQVpyYmFFbXp0OW9BRmU3TE1NbVFlWGMwcFFZPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
         key: ""
     # Extra certificate subject alternative names for the machine's certificate.
     certSANs: []
@@ -179,8 +179,8 @@ machine:
 
     # Used to provide instructions for installations.
     install:
-        disk: /dev/sda # The disk used for installations.
-        image: ghcr.io/siderolabs/installer:v1.7.6 # Allows for supplying the image used to perform the installation.
+        disk: /dev/nvme1n1 # The disk used for installations.
+        image: factory.talos.dev/installer-secureboot/bd8eab894486393ae365c13d47382eae514e4dd3e3314d3f4583d051988db6f5:v1.7.6 # Allows for supplying the image used to perform the installation.
         wipe: false # Indicates if the installation disk should be wiped at installation time.
         
         # # Look up disk using disk attributes like model, size, serial and others.
@@ -224,6 +224,54 @@ machine:
     #         #     username: username # Optional registry authentication.
     #         #     password: password # Optional registry authentication.
 
+    # Machine system disk encryption configuration.
+    systemDiskEncryption:
+        # State partition encryption.
+        state:
+            provider: luks2 # Encryption provider to use for the encryption.
+            # Defines the encryption keys generation and storage method.
+            keys:
+                - slot: 0 # Key slot number for LUKS2 encryption.
+                  # Enable TPM based disk encryption.
+                  tpm: {}
+                  
+                  # # KMS managed encryption key.
+                  # kms:
+                  #     endpoint: https://192.168.88.21:4443 # KMS endpoint to Seal/Unseal the key.
+            
+            # # Cipher kind to use for the encryption. Depends on the encryption provider.
+            # cipher: aes-xts-plain64
+
+            # # Defines the encryption sector size.
+            # blockSize: 4096
+
+            # # Additional --perf parameters for the LUKS2 encryption.
+            # options:
+            #     - no_read_workqueue
+            #     - no_write_workqueue
+        # Ephemeral partition encryption.
+        ephemeral:
+            provider: luks2 # Encryption provider to use for the encryption.
+            # Defines the encryption keys generation and storage method.
+            keys:
+                - slot: 0 # Key slot number for LUKS2 encryption.
+                  # Enable TPM based disk encryption.
+                  tpm: {}
+                  
+                  # # KMS managed encryption key.
+                  # kms:
+                  #     endpoint: https://192.168.88.21:4443 # KMS endpoint to Seal/Unseal the key.
+            
+            # # Cipher kind to use for the encryption. Depends on the encryption provider.
+            # cipher: aes-xts-plain64
+
+            # # Defines the encryption sector size.
+            # blockSize: 4096
+
+            # # Additional --perf parameters for the LUKS2 encryption.
+            # options:
+            #     - no_read_workqueue
+            #     - no_write_workqueue
     # Features describe individual Talos features that can be switched on or off.
     features:
         rbac: true # Enable role-based access control (RBAC).
@@ -334,32 +382,6 @@ machine:
     # sysfs:
     #     devices.system.cpu.cpu0.cpufreq.scaling_governor: performance
 
-    # # Machine system disk encryption configuration.
-    # systemDiskEncryption:
-    #     # Ephemeral partition encryption.
-    #     ephemeral:
-    #         provider: luks2 # Encryption provider to use for the encryption.
-    #         # Defines the encryption keys generation and storage method.
-    #         keys:
-    #             - # Deterministically generated key from the node UUID and PartitionLabel.
-    #               nodeID: {}
-    #               slot: 0 # Key slot number for LUKS2 encryption.
-    #               
-    #               # # KMS managed encryption key.
-    #               # kms:
-    #               #     endpoint: https://192.168.88.21:4443 # KMS endpoint to Seal/Unseal the key.
-    #         
-    #         # # Cipher kind to use for the encryption. Depends on the encryption provider.
-    #         # cipher: aes-xts-plain64
-
-    #         # # Defines the encryption sector size.
-    #         # blockSize: 4096
-
-    #         # # Additional --perf parameters for the LUKS2 encryption.
-    #         # options:
-    #         #     - no_read_workqueue
-    #         #     - no_write_workqueue
-
     # # Configures the udev system.
     # udev:
     #     # List of udev rules to apply to the udev system
@@ -399,8 +421,8 @@ machine:
     #     exampleTaint: exampleTaintValue:NoSchedule
 # Provides cluster specific configuration options.
 cluster:
-    id: O-cJ2YH9WqMb4fy30NrQng2MerlMAm7y1Q2iPpasXRs= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
-    secret: OcjszGwwBmEL50ucgeycWE/R0nx0JM8qIZkjv9GTUs8= # Shared secret of cluster (base64 encoded random 32 bytes).
+    id: qYThdc--hlfkJTwv7JFt76Fs889Ucl5YEIN3QTCr-qs= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
+    secret: GAOc4OQIyKCjXC7pTuXQak2tsgQP41yI9ykDOZPHE7k= # Shared secret of cluster (base64 encoded random 32 bytes).
     # Provides control plane specific configuration options.
     controlPlane:
         endpoint: https://192.168.7.200:6443 # Endpoint is the canonical controlplane endpoint, which can be an IP address or a DNS hostname.
@@ -420,10 +442,10 @@ cluster:
         #     # URLs containing manifests to apply for the CNI.
         #     urls:
         #         - https://docs.projectcalico.org/archive/v3.20/manifests/canal.yaml
-    token: 1y4wsj.5ohidqr41o0ur53b # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
+    token: dp03hw.8ch7jno450ixbrkg # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
     # The base64 encoded root certificate authority used by Kubernetes.
     ca:
-        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpekNDQVRDZ0F3SUJBZ0lSQU9wQXlWYy9IK3lhdEZmMVlTOUtaZDh3Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOREE1TURFeU1ERXhORGRhRncwek5EQTRNekF5TURFeApORGRhTUJVeEV6QVJCZ05WQkFvVENtdDFZbVZ5Ym1WMFpYTXdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CCkJ3TkNBQVFVVld5Q0Z6cDJBc0x6TnZ6Vy9Yc1RqalllcWk0NHNIb0dkN1RVSkEydXlEWUJwQ01HY2oyR29lQmsKMFcwZFlWMDdqaFM0Z294MnRkcGFMcU1ZZThXSG8yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXdIUVlEVlIwbApCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPCkJCWUVGQ25xb1M2T2x0L0tVaE5tZ3VQVFFwYkpkQTV5TUFvR0NDcUdTTTQ5QkFNQ0Ewa0FNRVlDSVFDMXFzNkcKUlVsRlBacEVPelVHUUNDN05sblIydzZvdEpBd0wyTk92cngwUndJaEFMTUtLMGNsK09oMXlDWnZ4Z3A0aG4zcQpTNDdiRER1YVhJZkcraTdBemtvYwotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpRENDQVMrZ0F3SUJBZ0lRRVF3QnZnR2padk1ISERHdnVOQzBsVEFLQmdncWhrak9QUVFEQWpBVk1STXcKRVFZRFZRUUtFd3ByZFdKbGNtNWxkR1Z6TUI0WERUSTBNRGt4TkRFM01UUXlNMW9YRFRNME1Ea3hNakUzTVRReQpNMW93RlRFVE1CRUdBMVVFQ2hNS2EzVmlaWEp1WlhSbGN6QlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VICkEwSUFCTUdxZ00wNG5wL011NThYZTRWdFFCY1IwQ0NvMStCaU9QYUNVNzcvV1lVY0t3bWF1d015Z2laSEc1eFoKeVM3K1VaUGg0MFVyRkVCSllVdWQ3aW5ENXVtallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWRCZ05WSFNVRQpGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFCkZnUVVQSFhjZGJBM3pVNnVOTVRsN2hUYzREbUhoR1F3Q2dZSUtvWkl6ajBFQXdJRFJ3QXdSQUlnYVA3QzZ6Y28KMUkzUDlDSlNJUzhZb1AxSnBwRFN4NCsxQ3psaGorbWhHcVlDSURzUVp4U3lmRjFvL2UxOWtpbURkTERHZThrcAowVFh1VVdZK0cvT0hOOUxQCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
         key: ""
     # Configures cluster member discovery.
     discovery:
