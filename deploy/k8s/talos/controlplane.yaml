@@ -180,7 +180,7 @@ machine:
     # Used to provide instructions for installations.
     install:
         disk: /dev/nvme1n1 # The disk used for installations.
-        image: factory.talos.dev/installer-secureboot/bd8eab894486393ae365c13d47382eae514e4dd3e3314d3f4583d051988db6f5:v1.7.6 # Allows for supplying the image used to perform the installation.
+        image: factory.talos.dev/installer-secureboot/53e70c74ac6245ca85e25b2ca8f46eae16200c531d4a4f42e3d7b7a59e2e86d8:v1.7.6 # Allows for supplying the image used to perform the installation.
         wipe: false # Indicates if the installation disk should be wiped at installation time.
         
         # # Look up disk using disk attributes like model, size, serial and others.
