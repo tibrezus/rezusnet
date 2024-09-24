@@ -4,10 +4,10 @@ persist: true
 # Provides machine specific configuration options.
 machine:
     type: worker # Defines the role of the machine within the cluster.
-    token: l8txnk.cowrdep1nzfhh7b8 # The `token` is used by a machine to join the PKI of the cluster.
+    token: h7jz0z.9cu7qu2ja811v6b9 # The `token` is used by a machine to join the PKI of the cluster.
     # The root certificate authority of the PKI.
     ca:
-        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQekNCOHFBREFnRUNBaEVBa04xWjBoV1JNRzNCeC9tUFFEOXNzREFGQmdNclpYQXdFREVPTUF3R0ExVUUKQ2hNRmRHRnNiM013SGhjTk1qUXdPVEUwTVRjeE5ESXpXaGNOTXpRd09URXlNVGN4TkRJeldqQVFNUTR3REFZRApWUVFLRXdWMFlXeHZjekFxTUFVR0F5dGxjQU1oQUp5ZlVYTDdzMzBndGQxVTltUnpxVmxBaGtuaXUvRVRKN2t1Ci9VaEtJZWRObzJFd1h6QU9CZ05WSFE4QkFmOEVCQU1DQW9Rd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSEF3RUcKQ0NzR0FRVUZCd01DTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkpxRUYyMmMxSFZGZ2dSOQpDdVpodldERnowVjdNQVVHQXl0bGNBTkJBSG0vZlV1ZHFjWERrcm1xaVByeFNINytiRndRNmx5Mjl4ZW82M3IvCkpHUEhqdXFzWDdXR3NxOUJ6YkVRQVpyYmFFbXp0OW9BRmU3TE1NbVFlWGMwcFFZPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQakNCOGFBREFnRUNBaEJ0SVV0SENPUi8vd25pRDFWRnJxNGVNQVVHQXl0bGNEQVFNUTR3REFZRFZRUUsKRXdWMFlXeHZjekFlRncweU5EQTVNalF4T0RBNE5EQmFGdzB6TkRBNU1qSXhPREE0TkRCYU1CQXhEakFNQmdOVgpCQW9UQlhSaGJHOXpNQ293QlFZREsyVndBeUVBdlB3L3hVWGcvS2tid3FqWVBpZnJaWHRKUkdGK0hmeVJGVDA5CmZGMWIwcHFqWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDaERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUkKS3dZQkJRVUhBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVWHJ0VC9IWHR1M2hiUDJ4cgpWNXZFZE45dnJ2RXdCUVlESzJWd0EwRUFDWmRwTkkyeis3ZTllR1lSZjBrOEpjSERYb1J2cXluQlFmSHhjRnBsCk9pclkybncvOHZRT3E2QzNYOHhjb1UrN0VjN1FqMnJpU1FDcFdodWJYL0NYQWc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
         key: ""
     # Extra certificate subject alternative names for the machine's certificate.
     certSANs: []
@@ -19,6 +19,16 @@ machine:
     # Used to provide additional options to the kubelet.
     kubelet:
         image: ghcr.io/siderolabs/kubelet:v1.30.3 # The `image` field is an optional reference to an alternative kubelet image.
+        # The `extraMounts` field is used to add additional mounts to the kubelet container.
+        extraMounts:
+            - destination: /var/openebs/local # Destination is the absolute path where the mount will be placed in the container.
+              type: bind # Type specifies the mount kind.
+              source: /var/openebs/local # Source specifies the source path of the mount.
+              # Options are fstab style mount options.
+              options:
+                - bind
+                - rshared
+                - rw
         defaultRuntimeSeccompProfileEnabled: true # Enable container runtime default Seccomp profile.
         disableManifestsDirectory: true # The `disableManifestsDirectory` field configures the kubelet to get static pod manifests from the /etc/kubernetes/manifests directory.
         
@@ -30,17 +40,6 @@ machine:
         # # The `extraArgs` field is used to provide additional flags to the kubelet.
         # extraArgs:
         #     key: value
-
-        # # The `extraMounts` field is used to add additional mounts to the kubelet container.
-        # extraMounts:
-        #     - destination: /var/lib/example # Destination is the absolute path where the mount will be placed in the container.
-        #       type: bind # Type specifies the mount kind.
-        #       source: /var/lib/example # Source specifies the source path of the mount.
-        #       # Options are fstab style mount options.
-        #       options:
-        #         - bind
-        #         - rshared
-        #         - rw
 
         # # The `extraConfig` field is used to provide kubelet configuration overrides.
         # extraConfig:
@@ -177,10 +176,23 @@ machine:
     # kubespan:
     #     enabled: true # Enable the KubeSpan feature.
 
+    # Used to partition, format and mount additional disks.
+    disks:
+        - device: /dev/nvme0n1 # The name of the disk to use.
+          # A list of partitions to create on the disk.
+          partitions:
+            - mountpoint: /var/openebs/local # Where to mount the partition.
+              
+              # # The size of partition: either bytes or human readable representation. If `size:` is omitted, the partition is sized to occupy the full disk.
+
+              # # Human readable representation.
+              # size: 100 MB
+              # # Precise value in bytes.
+              # size: 1073741824
     # Used to provide instructions for installations.
     install:
         disk: /dev/nvme1n1 # The disk used for installations.
-        image: factory.talos.dev/installer-secureboot/bd8eab894486393ae365c13d47382eae514e4dd3e3314d3f4583d051988db6f5:v1.7.6 # Allows for supplying the image used to perform the installation.
+        image: factory.talos.dev/installer-secureboot/577aebdf56be3f5dc5ee0156c1d5339be4c69b3bd98927d215e35ba563c85345:v1.8.0 # Allows for supplying the image used to perform the installation.
         wipe: false # Indicates if the installation disk should be wiped at installation time.
         
         # # Look up disk using disk attributes like model, size, serial and others.
@@ -197,6 +209,9 @@ machine:
         # # Allows for supplying additional system extension images to install on top of base Talos image.
         # extensions:
         #     - image: ghcr.io/siderolabs/gvisor:20220117.0-v1.0.0 # System extension image.
+    # Used to configure the machine's sysctls.
+    sysctls:
+        vm.nr_hugepages: "1024"
     # Used to configure the machine's container image registry mirrors.
     registries: {}
     # # Specifies mirror configuration for each registry host namespace.
@@ -320,22 +335,6 @@ machine:
     #             - image: nginx
     #               name: nginx
 
-    # # Used to partition, format and mount additional disks.
-
-    # # MachineDisks list example.
-    # disks:
-    #     - device: /dev/sdb # The name of the disk to use.
-    #       # A list of partitions to create on the disk.
-    #       partitions:
-    #         - mountpoint: /var/mnt/extra # Where to mount the partition.
-    #           
-    #           # # The size of partition: either bytes or human readable representation. If `size:` is omitted, the partition is sized to occupy the full disk.
-
-    #           # # Human readable representation.
-    #           # size: 100 MB
-    #           # # Precise value in bytes.
-    #           # size: 1073741824
-
     # # Allows the addition of user specified files.
 
     # # MachineFiles usage example.
@@ -367,14 +366,6 @@ machine:
     #     servers:
     #         - time.cloudflare.com
     #     bootTimeout: 2m0s # Specifies the timeout when the node time is considered to be in sync unlocking the boot sequence.
-
-    # # Used to configure the machine's sysctls.
-
-    # # MachineSysctls usage example.
-    # sysctls:
-    #     kernel.domainname: talos.dev
-    #     net.ipv4.ip_forward: "0"
-    #     net/ipv6/conf/eth0.100/disable_ipv6: "1"
 
     # # Used to configure the machine's sysfs.
 
@@ -421,8 +412,8 @@ machine:
     #     exampleTaint: exampleTaintValue:NoSchedule
 # Provides cluster specific configuration options.
 cluster:
-    id: qYThdc--hlfkJTwv7JFt76Fs889Ucl5YEIN3QTCr-qs= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
-    secret: GAOc4OQIyKCjXC7pTuXQak2tsgQP41yI9ykDOZPHE7k= # Shared secret of cluster (base64 encoded random 32 bytes).
+    id: 0aaTOAI6jBOmI2XTcZJahxWuCBi7Bx_yu3pheowHszg= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
+    secret: 1uHRrXzok87iqYBvKRyPqe9PyRKYdaL3ks+vdxn2UPw= # Shared secret of cluster (base64 encoded random 32 bytes).
     # Provides control plane specific configuration options.
     controlPlane:
         endpoint: https://192.168.7.200:6443 # Endpoint is the canonical controlplane endpoint, which can be an IP address or a DNS hostname.
@@ -442,10 +433,10 @@ cluster:
         #     # URLs containing manifests to apply for the CNI.
         #     urls:
         #         - https://docs.projectcalico.org/archive/v3.20/manifests/canal.yaml
-    token: dp03hw.8ch7jno450ixbrkg # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
+    token: roiorn.nthgd4ad15z9udqm # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
     # The base64 encoded root certificate authority used by Kubernetes.
     ca:
-        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpRENDQVMrZ0F3SUJBZ0lRRVF3QnZnR2padk1ISERHdnVOQzBsVEFLQmdncWhrak9QUVFEQWpBVk1STXcKRVFZRFZRUUtFd3ByZFdKbGNtNWxkR1Z6TUI0WERUSTBNRGt4TkRFM01UUXlNMW9YRFRNME1Ea3hNakUzTVRReQpNMW93RlRFVE1CRUdBMVVFQ2hNS2EzVmlaWEp1WlhSbGN6QlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VICkEwSUFCTUdxZ00wNG5wL011NThYZTRWdFFCY1IwQ0NvMStCaU9QYUNVNzcvV1lVY0t3bWF1d015Z2laSEc1eFoKeVM3K1VaUGg0MFVyRkVCSllVdWQ3aW5ENXVtallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWRCZ05WSFNVRQpGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFCkZnUVVQSFhjZGJBM3pVNnVOTVRsN2hUYzREbUhoR1F3Q2dZSUtvWkl6ajBFQXdJRFJ3QXdSQUlnYVA3QzZ6Y28KMUkzUDlDSlNJUzhZb1AxSnBwRFN4NCsxQ3psaGorbWhHcVlDSURzUVp4U3lmRjFvL2UxOWtpbURkTERHZThrcAowVFh1VVdZK0cvT0hOOUxQCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpekNDQVRDZ0F3SUJBZ0lSQU1KaXFkS2RFWmhUank5U1p3UkdzSEF3Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOREE1TWpReE9EQTROREJhRncwek5EQTVNakl4T0RBNApOREJhTUJVeEV6QVJCZ05WQkFvVENtdDFZbVZ5Ym1WMFpYTXdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CCkJ3TkNBQVN6TFRNQldvNjRWRWt3eENMeXpLNnF5T1BUSHlaaHBPRkpOazhqZ0JIWFpHemhnSW9KRlBmdFJTWlkKSndzV2dDWXVmQnJqdWd0eTcweHN0KzBudXZISm8yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXdIUVlEVlIwbApCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPCkJCWUVGUFBRRTkzN3J4QUJJSFdUTXpRZ3ppTjdheXNFTUFvR0NDcUdTTTQ5QkFNQ0Ewa0FNRVlDSVFDbXNLN2YKL2xXODJjcWxrZGpjRDdtNVVoL3ZFeEg4azJJWmlFYmdwaURVa1FJaEFNazZ5S2QrK1J5TEY5b3JvQUsrZ2hCVwprY3cxd0FybUpFVktaODBtTVpNeQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
         key: ""
     # Configures cluster member discovery.
     discovery:

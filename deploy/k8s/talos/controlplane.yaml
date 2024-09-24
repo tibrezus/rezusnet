@@ -4,11 +4,11 @@ persist: true
 # Provides machine specific configuration options.
 machine:
     type: controlplane # Defines the role of the machine within the cluster.
-    token: l8txnk.cowrdep1nzfhh7b8 # The `token` is used by a machine to join the PKI of the cluster.
+    token: h7jz0z.9cu7qu2ja811v6b9 # The `token` is used by a machine to join the PKI of the cluster.
     # The root certificate authority of the PKI.
     ca:
-        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQekNCOHFBREFnRUNBaEVBa04xWjBoV1JNRzNCeC9tUFFEOXNzREFGQmdNclpYQXdFREVPTUF3R0ExVUUKQ2hNRmRHRnNiM013SGhjTk1qUXdPVEUwTVRjeE5ESXpXaGNOTXpRd09URXlNVGN4TkRJeldqQVFNUTR3REFZRApWUVFLRXdWMFlXeHZjekFxTUFVR0F5dGxjQU1oQUp5ZlVYTDdzMzBndGQxVTltUnpxVmxBaGtuaXUvRVRKN2t1Ci9VaEtJZWRObzJFd1h6QU9CZ05WSFE4QkFmOEVCQU1DQW9Rd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSEF3RUcKQ0NzR0FRVUZCd01DTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkpxRUYyMmMxSFZGZ2dSOQpDdVpodldERnowVjdNQVVHQXl0bGNBTkJBSG0vZlV1ZHFjWERrcm1xaVByeFNINytiRndRNmx5Mjl4ZW82M3IvCkpHUEhqdXFzWDdXR3NxOUJ6YkVRQVpyYmFFbXp0OW9BRmU3TE1NbVFlWGMwcFFZPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
-        key: LS0tLS1CRUdJTiBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0KTUM0Q0FRQXdCUVlESzJWd0JDSUVJS1E2eEhuYU1qakZKdG1XTGNuZlVtb2JrU1hOU1UzeklRNmk2Ym5DSkpkaQotLS0tLUVORCBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0K
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQakNCOGFBREFnRUNBaEJ0SVV0SENPUi8vd25pRDFWRnJxNGVNQVVHQXl0bGNEQVFNUTR3REFZRFZRUUsKRXdWMFlXeHZjekFlRncweU5EQTVNalF4T0RBNE5EQmFGdzB6TkRBNU1qSXhPREE0TkRCYU1CQXhEakFNQmdOVgpCQW9UQlhSaGJHOXpNQ293QlFZREsyVndBeUVBdlB3L3hVWGcvS2tid3FqWVBpZnJaWHRKUkdGK0hmeVJGVDA5CmZGMWIwcHFqWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDaERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUkKS3dZQkJRVUhBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVWHJ0VC9IWHR1M2hiUDJ4cgpWNXZFZE45dnJ2RXdCUVlESzJWd0EwRUFDWmRwTkkyeis3ZTllR1lSZjBrOEpjSERYb1J2cXluQlFmSHhjRnBsCk9pclkybncvOHZRT3E2QzNYOHhjb1UrN0VjN1FqMnJpU1FDcFdodWJYL0NYQWc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: LS0tLS1CRUdJTiBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0KTUM0Q0FRQXdCUVlESzJWd0JDSUVJR08xR0pBSEVVbmRydnN6S1JLTkZhYU9nOGFaQTJ3MHFqbHFoTnNpOGxWKwotLS0tLUVORCBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0K
     # Extra certificate subject alternative names for the machine's certificate.
     certSANs: []
     #   # Uncomment this to enable SANs.
@@ -19,6 +19,16 @@ machine:
     # Used to provide additional options to the kubelet.
     kubelet:
         image: ghcr.io/siderolabs/kubelet:v1.30.3 # The `image` field is an optional reference to an alternative kubelet image.
+        # The `extraMounts` field is used to add additional mounts to the kubelet container.
+        extraMounts:
+            - destination: /var/openebs/local # Destination is the absolute path where the mount will be placed in the container.
+              type: bind # Type specifies the mount kind.
+              source: /var/openebs/local # Source specifies the source path of the mount.
+              # Options are fstab style mount options.
+              options:
+                - bind
+                - rshared
+                - rw
         defaultRuntimeSeccompProfileEnabled: true # Enable container runtime default Seccomp profile.
         disableManifestsDirectory: true # The `disableManifestsDirectory` field configures the kubelet to get static pod manifests from the /etc/kubernetes/manifests directory.
         
@@ -28,20 +38,8 @@ machine:
         #     - 169.254.2.53
 
         # # The `extraArgs` field is used to provide additional flags to the kubelet.
-        extraArgs:
+        # extraArgs:
         #     key: value
-            rotate-server-certificates: true
-
-        # # The `extraMounts` field is used to add additional mounts to the kubelet container.
-        extraMounts:
-            - destination: /var/lib/example # Destination is the absolute path where the mount will be placed in the container.
-              type: bind # Type specifies the mount kind.
-              source: /var/openebs/local # Source specifies the source path of the mount.
-        #       # Options are fstab style mount options.
-              options:
-                - bind
-                - rshared
-                - rw
 
         # # The `extraConfig` field is used to provide kubelet configuration overrides.
         # extraConfig:
@@ -178,6 +176,19 @@ machine:
     # kubespan:
     #     enabled: true # Enable the KubeSpan feature.
 
+    # Used to partition, format and mount additional disks.
+    disks:
+        - device: /dev/nvme0n1 # The name of the disk to use.
+          # A list of partitions to create on the disk.
+          partitions:
+            - mountpoint: /var/openebs/local # Where to mount the partition.
+              
+              # # The size of partition: either bytes or human readable representation. If `size:` is omitted, the partition is sized to occupy the full disk.
+
+              # # Human readable representation.
+              # size: 100 MB
+              # # Precise value in bytes.
+              # size: 1073741824
     # Used to provide instructions for installations.
     install:
         disk: /dev/nvme1n1 # The disk used for installations.
@@ -198,6 +209,9 @@ machine:
         # # Allows for supplying additional system extension images to install on top of base Talos image.
         # extensions:
         #     - image: ghcr.io/siderolabs/gvisor:20220117.0-v1.0.0 # System extension image.
+    # Used to configure the machine's sysctls.
+    sysctls:
+        vm.nr_hugepages: "1024"
     # Used to configure the machine's container image registry mirrors.
     registries: {}
     # # Specifies mirror configuration for each registry host namespace.
@@ -321,22 +335,6 @@ machine:
     #             - image: nginx
     #               name: nginx
 
-    # # Used to partition, format and mount additional disks.
-
-    # # MachineDisks list example.
-    disks:
-        - device: /dev/nvme0n1 # The name of the disk to use.
-    #       # A list of partitions to create on the disk.
-          partitions:
-            - mountpoint: /var/openebs/local # Where to mount the partition.
-    #           
-    #           # # The size of partition: either bytes or human readable representation. If `size:` is omitted, the partition is sized to occupy the full disk.
-
-    #           # # Human readable representation.
-    #           # size: 100 MB
-    #           # # Precise value in bytes.
-    #           # size: 1073741824
-
     # # Allows the addition of user specified files.
 
     # # MachineFiles usage example.
@@ -369,15 +367,6 @@ machine:
     #         - time.cloudflare.com
     #     bootTimeout: 2m0s # Specifies the timeout when the node time is considered to be in sync unlocking the boot sequence.
 
-    # # Used to configure the machine's sysctls.
-
-    # # MachineSysctls usage example.
-    sysctls:
-        vm.nr_hugepages: "1024"
-    #     kernel.domainname: talos.dev
-    #     net.ipv4.ip_forward: "0"
-    #     net/ipv6/conf/eth0.100/disable_ipv6: "1"
-
     # # Used to configure the machine's sysfs.
 
     # # MachineSysfs usage example.
@@ -398,14 +387,10 @@ machine:
     #           format: json_lines # Logs format.
 
     # # Configures the kernel.
-    kernel:
+    # kernel:
     #     # Kernel modules to load.
-        modules:
+    #     modules:
     #         - name: brtfs # Module name.
-            - name: drbd
-              parameters:
-                - usermode_helper=disabled
-            - name: drbd_transport_tcp
 
     # # Configures the seccomp profiles for the machine.
     # seccompProfiles:
@@ -427,8 +412,8 @@ machine:
     #     exampleTaint: exampleTaintValue:NoSchedule
 # Provides cluster specific configuration options.
 cluster:
-    id: qYThdc--hlfkJTwv7JFt76Fs889Ucl5YEIN3QTCr-qs= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
-    secret: GAOc4OQIyKCjXC7pTuXQak2tsgQP41yI9ykDOZPHE7k= # Shared secret of cluster (base64 encoded random 32 bytes).
+    id: 0aaTOAI6jBOmI2XTcZJahxWuCBi7Bx_yu3pheowHszg= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
+    secret: 1uHRrXzok87iqYBvKRyPqe9PyRKYdaL3ks+vdxn2UPw= # Shared secret of cluster (base64 encoded random 32 bytes).
     # Provides control plane specific configuration options.
     controlPlane:
         endpoint: https://192.168.7.200:6443 # Endpoint is the canonical controlplane endpoint, which can be an IP address or a DNS hostname.
@@ -449,19 +434,19 @@ cluster:
         #     # URLs containing manifests to apply for the CNI.
         #     urls:
         #         - https://docs.projectcalico.org/archive/v3.20/manifests/canal.yaml
-    token: dp03hw.8ch7jno450ixbrkg # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
-    secretboxEncryptionSecret: 38Bei8o8acY0hRdprMZmrMegzjtwuE4zio5vDMB5PN8= # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
+    token: roiorn.nthgd4ad15z9udqm # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
+    secretboxEncryptionSecret: faivqIbzMLWBy1yE4jHre41QTVGoIGw3i+F7R76kHEE= # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
     # The base64 encoded root certificate authority used by Kubernetes.
     ca:
-        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpRENDQVMrZ0F3SUJBZ0lRRVF3QnZnR2padk1ISERHdnVOQzBsVEFLQmdncWhrak9QUVFEQWpBVk1STXcKRVFZRFZRUUtFd3ByZFdKbGNtNWxkR1Z6TUI0WERUSTBNRGt4TkRFM01UUXlNMW9YRFRNME1Ea3hNakUzTVRReQpNMW93RlRFVE1CRUdBMVVFQ2hNS2EzVmlaWEp1WlhSbGN6QlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VICkEwSUFCTUdxZ00wNG5wL011NThYZTRWdFFCY1IwQ0NvMStCaU9QYUNVNzcvV1lVY0t3bWF1d015Z2laSEc1eFoKeVM3K1VaUGg0MFVyRkVCSllVdWQ3aW5ENXVtallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWRCZ05WSFNVRQpGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFCkZnUVVQSFhjZGJBM3pVNnVOTVRsN2hUYzREbUhoR1F3Q2dZSUtvWkl6ajBFQXdJRFJ3QXdSQUlnYVA3QzZ6Y28KMUkzUDlDSlNJUzhZb1AxSnBwRFN4NCsxQ3psaGorbWhHcVlDSURzUVp4U3lmRjFvL2UxOWtpbURkTERHZThrcAowVFh1VVdZK0cvT0hOOUxQCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
-        key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUxQZHJObkZWc1lOVTVhV2M0SDhlU0RBcCs0YnFaK0o0RURiSUR1Qk1jRFNvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFd2FxQXpUaWVuOHk3bnhkN2hXMUFGeEhRSUtqWDRHSTQ5b0pUdnY5WmhSd3JDWnE3QXpLQwpKa2NibkZuSkx2NVJrK0hqUlNzVVFFbGhTNTN1S2NQbTZRPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpekNDQVRDZ0F3SUJBZ0lSQU1KaXFkS2RFWmhUank5U1p3UkdzSEF3Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOREE1TWpReE9EQTROREJhRncwek5EQTVNakl4T0RBNApOREJhTUJVeEV6QVJCZ05WQkFvVENtdDFZbVZ5Ym1WMFpYTXdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CCkJ3TkNBQVN6TFRNQldvNjRWRWt3eENMeXpLNnF5T1BUSHlaaHBPRkpOazhqZ0JIWFpHemhnSW9KRlBmdFJTWlkKSndzV2dDWXVmQnJqdWd0eTcweHN0KzBudXZISm8yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXdIUVlEVlIwbApCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPCkJCWUVGUFBRRTkzN3J4QUJJSFdUTXpRZ3ppTjdheXNFTUFvR0NDcUdTTTQ5QkFNQ0Ewa0FNRVlDSVFDbXNLN2YKL2xXODJjcWxrZGpjRDdtNVVoL3ZFeEg4azJJWmlFYmdwaURVa1FJaEFNazZ5S2QrK1J5TEY5b3JvQUsrZ2hCVwprY3cxd0FybUpFVktaODBtTVpNeQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSU1Zb3hCZFZGd0pVa1FSVGNuZ0o1VXlKN2ZNYUl0RHVBZUIycGZ5SnpLWklvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFc3kwekFWcU91RlJKTU1RaThzeXVxc2pqMHg4bVlhVGhTVFpQSTRBUjEyUnM0WUNLQ1JUMwo3VVVtV0NjTEZvQW1MbndhNDdvTGN1OU1iTGZ0SjdyeHlRPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
     # The base64 encoded aggregator certificate authority used by Kubernetes for front-proxy certificate generation.
     aggregatorCA:
-        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJYekNDQVFXZ0F3SUJBZ0lRYWt2TDlYVk9qbmY4blI5M0FoRWJ3REFLQmdncWhrak9QUVFEQWpBQU1CNFgKRFRJME1Ea3hOREUzTVRReU0xb1hEVE0wTURreE1qRTNNVFF5TTFvd0FEQlpNQk1HQnlxR1NNNDlBZ0VHQ0NxRwpTTTQ5QXdFSEEwSUFCSHBja3NMTlJkUXVWNzcyZitZTnVEUHBJZEh0ZmdMQXJLZVBPNnNxRWV3OVNZaTNidG8zCjlCK09rQ1RWdUVOeEtJL0NZU05wcmRobDFxVXdQZXVjbU0yallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWQKQmdOVkhTVUVGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZApCZ05WSFE0RUZnUVVpMTdBbTlzQk13SVZMZjlIeWJCNkN6emZHMVl3Q2dZSUtvWkl6ajBFQXdJRFNBQXdSUUlnClZzY1J2eEh0QTVqWjFjUHZ2ZTNTRS8xTFVqbHlUL0l5ZkJqbFluc3BZR29DSVFEN1ZJQmFacisrc2pnd3YzaTcKOG54MWp0L3cyZDkxdWVUSXlDN2pjbTRSNmc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
-        key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSU54UTZpNk0yN0JqWWNzRWY3Mjc0RzlkSnFZNGZxTk9mVnkxdEFja3ZHcG9vQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFZWx5U3dzMUYxQzVYdnZaLzVnMjRNK2toMGUxK0FzQ3NwNDg3cXlvUjdEMUppTGR1MmpmMApINDZRSk5XNFEzRW9qOEpoSTJtdDJHWFdwVEE5NjV5WXpRPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJZRENDQVFhZ0F3SUJBZ0lSQU1sK0FtbWw0M3lxUTcvekVrRCswRmd3Q2dZSUtvWkl6ajBFQXdJd0FEQWUKRncweU5EQTVNalF4T0RBNE5EQmFGdzB6TkRBNU1qSXhPREE0TkRCYU1BQXdXVEFUQmdjcWhrak9QUUlCQmdncQpoa2pPUFFNQkJ3TkNBQVRjcGFyVEJIUDREdXF3anhNT0I2bzZkOEdXTTVpak1KOHpQS2NmbDRzN3N1VVhOUUM5CnM5VVByQnBFNjNTY2x6TjZLZngvUjdTcTlmbUNsdmZEc2F6ZG8yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXcKSFFZRFZSMGxCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4dwpIUVlEVlIwT0JCWUVGSncrbzV0WDVFS1FWUjFTSkxvRGpTUThJYXF1TUFvR0NDcUdTTTQ5QkFNQ0EwZ0FNRVVDCklRRFlQb2dCd1U3ajY0aTZEakJBTW12U1NidTJPc3A2MUZOQ2wvdmthZ0JVN1FJZ09JQ2I5SnpQaituVW9SeE8KMVpZb2hiNlN2L2s2KzlVSkVLdXVkTkszQXY0PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSVBYM2hoQWN0LyttLzkzamptdU5zZFh4ZmJWV3NVKzNMV2thL290cC82dDhvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFM0tXcTB3UnorQTdxc0k4VERnZXFPbmZCbGpPWW96Q2ZNenluSDVlTE83TGxGelVBdmJQVgpENndhUk90MG5KY3plaW44ZjBlMHF2WDVncGIzdzdHczNRPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
     # The base64 encoded private key for service account token generation.
     serviceAccount:
-        key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlKSndJQkFBS0NBZ0VBeUxLWEZiWkhieldLUXA2bVpUU2lRK2UreWk0Qmt3cVlPdEt3UGdDd0VJK1NRUjZBCjJPZEFqN1YvRU4vaGo3NzEybFlnMGZ3Tk1hMWZ0bGd2d05JN25yUnRBOWVOU0FGTzNQQURTVkthblVkbWtQZ1QKbHBXNXNnemM4OU1mZTFJVyttbXlnMHhzUVBISnBqYnVWeFNNSm1jUzBZekJUTW5aaE4yQVhnSWF3OFBSVFdrWQo5R0loR2E1WEhvUzBtTHVaZUlaQnRLb0xMV2psTGdnS21Iak4zdkUzaDEra29kZW0xU0dRMTBYUXZvZWVRcVNFCnhxYllIU1lrV2U2ZGZaVk92eE5pZERlR1pCdU52TE8xNHpMRGFDeW81dFVFcHBZYTdUMWNYSjFEYnd2MHdBUkMKK3BxNFRhRlBQY2VyVk5BZlRKOHdseGdrN01GckVIdHNCcEhBNHV3Qy91a3FjVk5RQXM3Q1Vpb1ZUKzU5R3MzagpFT0JaWHh5OTRRdkVFVGNGdHNxVXRTZ2J5UkpkV1c4bHJJK0s1UmZEZ0FxakNOb2UyUlR2aXRFN3dEdy9NS2lRCklYNVdRTVFLbzV0cHh1REx6NDBWKy9QeE1RRXI5eENJRXFxZUJSSkVBdjFmeTY0c3hNS2paYnd3UnBucG8yQnkKTk1lc1dGMnRpUmlkOXlibUNUZzMzcmxka1IyeUYySXVlbjU5TXpEb3lib2xBNVZNU1VPR09oUTMxNTJFZW1pcQo4VlVFN05aRk1vZ1RSL1YyTW82UTcyVWs0bDU3eVQwS2M5RlhZcWhITGU1SzJDdWlhdzB5b3AwNjJEODJseEJjCnd4WjNGTURsbGZMWmd0YmtsMWFjSk1SZEtBQ2Y2VXVESGp4WkZwNGgzL1lOektDd0x3VXFjTlpUemVjQ0F3RUEKQVFLQ0FnQkswMXJFKzRxeWliR2NtTzNNdWN6dHFFOVhyY05rZ1FTMG1heWYwVDNUVHRQbWQycnVjM2w4bXR4ZQovRGxxa0hXMUMzdDlEbzRVd1dEMzZQVVUzTXpocEw4b09Zc3hGMXZCdjdKWitmUXZRMW1ZSHdXZWxRQUF4QTcwCjBQZmgwSDlFcVhlbXdDMTBJVEZmU1FlZmE4ZTg0WjBBaDR2aUJ6ZVQ4OGxTUTFLYlBqeWdzZGhkOU9BR1pSdVMKQTBRWjFZZW9pZFdoZCt4bTU3N2FaS0VlcTV1RnpVVTRzWTM5MFJzZ1J6MXJKVnBvVHNQUWNPb1g3a2lReFpHegovZVMxMTU3ZVdtblFqb3NLYzhOcVlVNGxBTjRkenRqQ0J4V096bFFIczJMbUhMUHhpUEdkVFhseldZL3hVWHpyCnVhL0ZGVHMySS92SHVYYTYxbm9HVVIyN2JVZ09LWVZiN1IzamdmRGtjRmpwV2FYRzFqd2ZBRis1c2JuQU0xdHcKbkZCQ1hxa0RlR25MSUhnUTlsSkVCRFF2eG5jMXhlb05mZVpHRWtuU01TVG1FR3ZVREZ5U28vZ1NUaGM5Q09jWQpzdExVV0V4YUdTZ2dya3NlMXR5ZW5TRkhPOEJYbHVKZzMxbEhIZnN2c2Q5TW5YMWZOVU93bGJ6cUVyNmcxUEdNCm5NV1QxbVREeHp3a055MDBuSGI1am5IZmFGSVZ4ZkkxdHlZSDBteEZOdjZiOVlGMjhuYU5IZ1BWRXRkTmQxNFYKT0c0dkxPSUtraDMyazV1clI0VndXU056MElBTUUxcC9HeDMwVDVtSDlVU3NVRk5ITnM3WHN6R0s4dU5RRkJlVQpaWFpTUitFQlZGTStCcTVTekFUb3NYajZmRzFsaFdBU2JTUzgyUWlPUjNadnZDZ29VUUtDQVFFQTU0dTJkWngxCjZybE5vNFFONUlRTU16U2hndmt3NWkwbEwrcUlQRFdSM3E5UDdjVlAzM0hyU2dSQWNBelgrbTRSTWRvbjFvRWoKaXlUazZTS1N4VUFHcW1YT002Z2d6VmwzV1BRa2JwSm5yN1JmekdPUEtsMG5LaGl0S1FySkNESldybjA4b1FpSAppWFEzZWJrbDNOQmg3eGFjMnUwVE1YdHd0ZDU2YXZmRnhFcUJwNHZoQ2c4Zkx5MWpFWnRNYnVoSTVSWXpJRk41CjlrRWZKdUlJN3dhbEMvMnBxSndWTEZlS0pOZ2VjUHZRSXU0eG1xR0xtelRNMzVmK2E0eEJRS1pRZnEzVFpHeDAKQ1R4NDFZZ3lZamp6cWhPYnFRd0daZHprQmZZR204RXhncFVZb1RJR2NtZEZmT1F0S1d1ZFdIQ2puZk5Tc1o1VApVYzhMeWhLU1lxemRPd0tDQVFFQTNlVFdwSnhmQnhBTStkR084b2pGNFJpRVpLNE1vd2Q1RjAzT0NFVm12Q1phCkczaTJTblAvbnJMaVBOajJLbUdwRTVLdTd6Yy9veGFvQXo0UmMxK2NFRjJJbG9mWERhRzFCemZCYncvcVlVemoKRjBjNVVhaUZIWGVFNUw3WnBMQXF5SUV3RkJ3RjhBUnp3RkxrQldndkVka0ZINlVjRHV4SW5iUnR6dGJIb090dApTYzRNTVVBeXdmUGpZbW5CTGdOSDlrbHgrckdDVXdwL2JNczRWTms1NXp4RG1HeGVQSjgzbFRTSmppUFFlQ1JrClpwenRTOCtJVURlQnFSTHhZR1NxUnQzSk0reHZ4TXZxT2JaekhKdFl5M2lJbUJBeUxUeURseFljWlBXVDlsWmwKc2pQWHhIa0FoSWhlUU9DVkdMYmZJMmtVWGwxajZvT2F0bkhBTlZXM1JRS0NBUUFzbXRTR2FhS3BtaExqeWgrbgpBdTBhdkN2VkFFNDBPVVF0cTkrY3diRWRGZWF1NWxEUnVhOWE3ZUMvOVNseUc5d0NINFdISkErRjBaQ3JmTGFMCmV4OE5tbGtUeUhLeFBHZnFZZlhXdXl0d1JLNGp3SlltMGhVbVhlU1Z3SGNqdGhiT3ZGOStvaGNDR3JwSkg2cTAKbEF3WnMrQjVxQ3dIWDBGQ045NmJWcW5wZTNUb291Q3lRR0dBaEJ6T21uMHA3R09HaGpWSkordVp6Y2ZEaE0yMQp4akRyVTIxb2h0RHBYdC9FNDBGU0FLQ0M2aUh5S09hcytvbnhGT1cxTUNxdDJwd3RHeTFhN2kyWVRlYjFNNnlKCkVYR1hOUG5Lb2Y5bGhoMERMUGJ1OEZPcVZUQ09kUVdhNmx3UGlDRlBGbVVVVVhhamllbEhRRG5LeTdqNHI0VTEKcnhsYkFvSUJBSExNVzhnYUpvZk81QWV6UlZOeE0zNzdZak44WUlsUDZuUUdDdHY0bStnbnAyS2pGeHg1MnZ2Tgo3SUl5ZFZrRDRhZUFzZ1NNL3QxdmNVa01LWmNaRmZMWmtUcmYySUR5OG1kamp5M1lmQmdPNFVZLzBRWFFPOTQ4CjRZSSt3dmNUTlc4NmR4ZFFVRG9XODVQQ3pybUZaeVRDdElYa3RCbDhZUzFHRmJGM0tSeTE4SHJJb1VJeHhwRFYKandSeFZrSnA3Q2NkWkZ5Z3paNE14bFFRNTNudVVLaXpZdjFPdzRwMWpSb2liakFkazFNMDhNU3QxNDdyTmNqYQpqcmhjVm9qYVM4WVNKSEE2bUxDbUZ1MzQyS0VxTmN3KzlkeEdOTTkyaVZYM1dJVmJFRXZYOHhFNUJSNWV3OGZOCmpZWGZLd1A0U0lWWGJmUk1PTTh4ZXk5OHRrWmhyRWtDZ2dFQVV5amxyWUVBZHoxSDdwWllJMCtucW0zeGlYcmIKblgzVlhaYXNoUzZlaU1xRk5xQzgxb3krbDdaVEhmblBFQjU1T1FJQi83M0dwTnhCVGx4UjJtUHRmRkNhRWgxeApOSlUzYllvYWJsOTdud2Z6Uk8wVXhrRkxTT1prdDRrbzhkY0w1Nk9jYTJyRFRhUm5vUFZ1MERlazNxKzNHL2h0CkZCQ1RXWnhtcEhycVhsYU0xaGxxVGxCRis4dk9aS1hiSUhXSFRxWkpDSjhUeDQ5cjRnamgxK3lIVElsUTdKcDIKZzg3ancxQVdKbWEvTDExcTRkY1NONjExd2t1YmdNbEtnMTFXWDhxL1dyVDcyeHB3SEFtQ25kcDBIbWNmY1o4Mwppb24yZUplWXVNQkNzUkRoSHpFQmw3WGRXTkpQOEFwQk9sb0NmZzl3L3NtQU9zSVRDRmxoVVRZQWVBPT0KLS0tLS1FTkQgUlNBIFBSSVZBVEUgS0VZLS0tLS0K
+        key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlKS0FJQkFBS0NBZ0VBcEZYWUpGVUJxV0RRMnkzK0pFcGxrK1JPMlZkWjlOWS9vWkVTMmJBdjFBbzcwSlFiCnJ0emdxelJCZnk3NE9VR0xuMTlmM0RRRW01NnF1NUlUYzJ3bTZ1NHNVLzFEY2pnUnVickt6aHZ1WXVSZTJPWTMKNE1LM3g1VThWZ1AyMWlqM1V1WkVBTXhNNm1ObjJGbmxKSUk4UTVYcmNHOW02N0RGVjR2QkdmcW80Q2V6ZDRuagpXV0hjUldoTmpZdjRHRVE4TkZpeFd2NitDbTd0eWJnWTV4RzBMTGE0alFHeE1RMTdISGIxby9lVTJXTURzUFppCkNUVS9VOHFDa2FoUktMSnFXWnJVTFpFOGFEczZQd1ozMXp4UGtpUE41T2RHbm50eEtWWVpJbnEwS3FSRnlkejUKVG1PdXhQZWROSEpUNFFnODlMZk53dklNV0U4RWlSOEg3T0EweTRINmVsOURWWi93TldFSmpkaS9Jb2tzOEpkaApRVTZlL2RRcmZob2kyWGxPbGJGT3g4SjZnSTQzalk2dEVDRnY5MS9aZ2hGVXlWNmtUQ3crbGNtalU5ZC9VWjFiCkFUOE12MnY4dkI4aXN0MFBwSDV5YWR4R2RXR1BXSk41K3Zla2JGTWx0Z05nMzhNcGJjUXZZSk5TMnpSNHJrUUgKS3BERjJrei9RMzRBTk81eUNOQjV5THhXdElkQUE2WFc1MWppc0pzQWpMcDAyRnZxMWdLR1FCSDI0V0JPdVpvagphRndQb1FSdjNYUURzcUxKL0xSZ1daSHQ3ZE5VbVNMODBISEg1Slp2cytsVi9kK2NVZWhrQnl3bmNCODBxNGMvCit1eXBXbGVtQm5MV1RUQktnOUNoT2hjRWEyOFhmWk0xNGRBeTJIcWgrQk9jOTQxWloya0VMeVdHaFdVQ0F3RUEKQVFLQ0FnRUFtUk9aeGFZbGFSaFZGSVdRSVUvbnRNNUxvR3FjMGRNczdKd05XaGVqUmJuT28ra0NyR3oxSHFVTAppYVEvOWwyVzZIclgrVysvQnhMU2FPeVdEOE1qc1Z6d2o3L3ZycHFKOEY4T0FOWEZ4ZnFDV3pwL3ZHN0U4RFdVClFXOXA0MjIvakVvUCtFcFdMMU12YlRtM2w3MTAwMlA0THdDbWQwOXZVN0JMeko1UDVwVTB1Rm9LRzcxcmlIK3oKRmZIV3hRdnlwTFFsYU9TNE0xSEhVRXFiYjhwdThlTzJueXAvV25qN1A3V1Q5UXR2Yk51dG1ZNjRIV21yTnFzQgoyeHBWbHpveWxJc0RyL3FFc1hiU045a1hrcmVNUzAzc3daZXBrWURkRlNzdE9JL2grWUtSdTRxSjlEb29sek1zCkRhbWRkcFhNNmd1NHNDbjEwK0N2RWVlRTQyS3A2WlVwNzhENGZkaTdDMnNrQ3NkMHhVbUVSU2c2VXhqaDZRa00KOFVhNWJmT3RJb1RhZFhsWjI0UUN6MkI3VTVJYURuQ214SmNWbThnSE8zaThhdmZYbzErNTFOZnArNlBxOTZtOQpCcXFjOURZNkpPeG5vV1pCckEySzVheEZ5UjlCa0JaTzZiMWUzbVphQWlEY0h2L085bVltZ0JKU2ZubldENmNxClByTzRIMmU2RGxJS2R3NVFrR01GR3dwcU14ajFRVzlETk0vM1VPMEs1TDQ3MVNTTGlsNm84RXBlcHBtQ3k2UysKOFVzcGFXaVh2RHdwTFA1QmVITDlLeFdsbDFReWVjRCs2eXdaSm1EdXVaY2c3T3hXTEtCUGdlZlk3aEtncXB6UgpFMk5GNE9WWFdtWnhrcVJNTUxnSlJNdkc2akJ4SjVheWtaYUViM1pUd2VFSGJleThRb0VDZ2dFQkFNWHZGTGtwCnkyNjA5YnN4NDdVZFRqTHJOQVdCeklqMGltNVVCV3B0elRONytHbmpUUmEvR2xnSWZsWnk2WkNVcFc3N1RBd0UKVXRxN2E3eSt3MGpOSTd2bnpGeWJHRW5OaW5obHVpclBGWFJYYWJaUUZiM0I5aVZPNkZYdm9TTUdES2htb2c3aAp4Yyt5YnBmRjNLQzJFbE1BUnNXSnJpU0xZOXVETVR3eEpsL2lMVVZQVDZNWEN6ajVBSTB4bUZOdk5jcHVwcmVsCk9XMGVDby9rbkJnSkswUnp3NGNkb080Vi9BTUhqaXpGZmVMM0YyQ20zV0NIUUk5dGUxQjlyMUhzQ3FMdHdJNlgKemRaL0xoc3BpNDRaZW9HbE1lT0VWYW02MkFxMlpBQlZQOWk3eVhFSjIvaE1CTklIb2NkMWpIcm95MG96Nk9ISQpYa0E2M1BSODE0cE1hNFVDZ2dFQkFOU0xmdmNmQkd4WTk1Nmh4QmxYM0k0UzhWd05OYjlPOTBkd1lKWjN4QUJ1Cnd5bTc5Wk1PWDBucjFQelQzZlFxRVQ2MDZxMUwydGlXdVdDa2FXYVdTbklRb20rK0hPUCtDWjRDcTJ0R3pPRHMKcjNOazE2VHhuRDY1NEhkRERCM1owOXRIRkw0RUxLTGt3bVhWSkZZZnhwL0p3YzVNWGxkckEwb0RBbytjZ3grOApCTi9PNTFFcWtLM2NtekVsdFA1bGF0WFozTmJPNVZQU2FTT21GNm9xWHR6R2lnVDBJeHRrSUFDak9VN2prdTVPCjNEeHFXRTJqV29uUVozeGlkNHlKd1hBeXYxakRJa3NPVjlCcjlpOENyLzlQWmREQ1dlMWdqdTc1VGN2SVMydnAKWkhJSXpBay9CQmhMelJCaEJRYTlVNFRScmNBS1BmYTlxWFoyKzgxQktHRUNnZjlwN0lncWp6TlBDNGgxcFQwMgpyM2dweDdVUFBXYzM0Nll4Wk1XQkwwR2hTN2FrOC85TkxQZnNKSjkzcEFkYVdESXdNa3VBSXRBMFBoaHA2YXlZClNTL1dYelgrV1FHbWZWaWRGZE9MRlVkbCsyR1hMMFJ6U0ZseG5jaTROSVVIT1RXTTZWL1Fsd0pGSkRnTEFOZ1IKS1Y2bERJRFROZHI3czV5ODNIaDh2ZERMZno2NjJMYkZrSTl3N2RCZHZ5ekZlYjVQbHVlaFg4cGJtcmdNU1VzLwprYWlWK1YycDhURXVPSldsQ1dZTWo2UE8wbXl3VEp3c0REV0FqQlp4L05EV0JudXF0WkZXdmVacDQ2WEk0M0xMCm1OYjJpbkVvVUttSEszWnlSU2svQkdBbW5GZ3hKaFdSeXh6SlNVeEtjWjI4S05paDNTWERybmJCNkw1V0dIbEEKaWFVQ2dnRUJBSnMvb1dma1VoaktDMlRsaUJWeTVma293UCtaN281a29aNmU2UTQvUVAySDZpb0x6dDZ4ZXN6Rgo0L2NnMGxqTWVYZ3lNZENQUGJWQ3N2bHlYa0srdUhZRXpJR09mZy9TdVRlZmY1S0dUcFJramV0ZDExMzExVWpFCkFMOWNTL2RwNnFPYWtmNFJrb0VSVXlXS3dGWGdNL2IzS2djRUpVejVMNWZhQnY3Yk5iUHlaQ1VPUGt3OUtSeTEKck80RE91Y3ZNUkF2YUczSEJoOXA2NzVNVGJEUDdpYVpKcXRqb0ZrYmszeWp2UEp3ckJ4Qm9nREhOT1RRMHdzagpITlB3SUo2WTZLQ0prTmJIQWIrTkpIdHF3SkdxQnVBWUlLaVJyWm9FRTZOZW1vS2xOT0lId29UQkJEZ2t2VnI1CjB6bUpoR0JkM2lsLzlzZjFNem1OWThEU1BDNjZ6MEVDZ2dFQkFKTDkxVHpZMlZ5NWxIdzFyaW5oWG52VHB5LzIKT1ozYXVsalAycXVLTDBUalVoNENFQkNOQVN5WVBUQUNsbmI5U2V2MzMvWFduQiszMUNlVkpsaEIrYzlKRmQrKwpZNDFKVERkajU0UlNiWkZEUTBYQ3JQM1JlbWE4VzVjUjBENUprZ0tBU1N3YkcyRlJlSEQ0U0tzVUo4eVVDWGozCmVIUmZhYUx2YjFKU2ZGbVQ4NVpjVW1QSm8yM3VCeER0UFZDNUdYWERtM0hhOCtIZytRVUVxQXV5ckhCVFJCaisKSjVET2NRTlpKeDhRRU1YRElzWTZ5RUJ5YjUzVmN1d1ZHTlJTV3RpQ0dSTllXYmpWMzZiSmpSL0NGUXFuWDJwLwpaNzkwUUZyeW5BWXJUemNaOG9VK09ETXJYcGs3Sld5WXJhcklkKzdqTGQwMnl3V3h6dWhvZk9TQkIxUT0KLS0tLS1FTkQgUlNBIFBSSVZBVEUgS0VZLS0tLS0K
     # API server specific configuration options.
     apiServer:
         image: registry.k8s.io/kube-apiserver:v1.30.3 # The container image used in the API server manifest.
@@ -522,8 +507,8 @@ cluster:
     etcd:
         # The `ca` is the root certificate authority of the PKI.
         ca:
-            crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJmakNDQVNPZ0F3SUJBZ0lRY21mY25RTGgzT0xCcERMMHhLSUdSREFLQmdncWhrak9QUVFEQWpBUE1RMHcKQ3dZRFZRUUtFd1JsZEdOa01CNFhEVEkwTURreE5ERTNNVFF5TTFvWERUTTBNRGt4TWpFM01UUXlNMW93RHpFTgpNQXNHQTFVRUNoTUVaWFJqWkRCWk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBQktSTFJYQ3dSTXQ0CnJOTnBRb005cTB4M1Q5aUlkSi9kQm81c3p6TmZpQm9OTENZaEdraUFjdWlRSjlGNFNSUjdNUEdPeGt2Y0ZXVEEKMXlVK3dpdU9TUXVqWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDaERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjRApBUVlJS3dZQkJRVUhBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVUHBnUmNvNWYwdFI2CjZuVERXSUNONHRZNXFZMHdDZ1lJS29aSXpqMEVBd0lEU1FBd1JnSWhBUFo2YmtSL2JkaWE2YklaTVhRUFlFTDkKNFJJV1NaeDV6R1pTNWRGd1EydUxBaUVBdlp6aHMrZ2VGQ2pWaXFzSit0RG5RS1U5TC9oVVUwRFFpZkd2VThJUwpkNWM9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
-            key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSVBxYW9IK1hWUWxzNXhZejgwNXRrWHFURzBiODlNWndsdkQvUithaE1wUDdvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFcEV0RmNMQkV5M2lzMDJsQ2d6MnJUSGRQMkloMG45MEdqbXpQTTErSUdnMHNKaUVhU0lCeQo2SkFuMFhoSkZIc3c4WTdHUzl3VlpNRFhKVDdDSzQ1SkN3PT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+            crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJmVENDQVNPZ0F3SUJBZ0lRTTZSVVlpQUE3WExFNFllQndJTElZVEFLQmdncWhrak9QUVFEQWpBUE1RMHcKQ3dZRFZRUUtFd1JsZEdOa01CNFhEVEkwTURreU5ERTRNRGcwTUZvWERUTTBNRGt5TWpFNE1EZzBNRm93RHpFTgpNQXNHQTFVRUNoTUVaWFJqWkRCWk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBQkdZcHk2WmpMenp1CktFWm5yYWlJZ2lRWU5ucDYzUVN3bXRQZHZyTTlQSk9OZzY2Uk12OWhmVTdrS1pGU2dFMWFlcVFIWHpKZVl4Wm8KaEkvVFV3NzFkYU9qWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDaERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjRApBUVlJS3dZQkJRVUhBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVSVRmanpUMlhjejk0CnFYa295blVDR2E0TDZkd3dDZ1lJS29aSXpqMEVBd0lEU0FBd1JRSWhBSWV4bk5MQ2VadXFyMnRrdVQ5V3JTN0IKSVc0aGhvUlBYTmpzeVk5amdId3NBaUE3QVo2aFpEWlEzUndjOC9HR2JOY2xWTXc2Q2xUYmVBTGZ3SWhPMjBnbwpRZz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+            key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUVVbEIxaGpkaVNCYzFQR3p3TWVpZCtyWjc2VTlYdUVuOVE5WFh5QlRqNi9vQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFWmluTHBtTXZQTzRvUm1ldHFJaUNKQmcyZW5yZEJMQ2EwOTIrc3owOGs0MkRycEV5LzJGOQpUdVFwa1ZLQVRWcDZwQWRmTWw1akZtaUVqOU5URHZWMW93PT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
         
         # # The container image used to create the etcd service.
         # image: gcr.io/etcd-development/etcd:v3.5.13
