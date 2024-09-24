@@ -328,7 +328,7 @@ machine:
         - device: /dev/nvme0n1 # The name of the disk to use.
     #       # A list of partitions to create on the disk.
           partitions:
-            - mountpoint: /var/openebs.local # Where to mount the partition.
+            - mountpoint: /var/openebs/local # Where to mount the partition.
     #           
     #           # # The size of partition: either bytes or human readable representation. If `size:` is omitted, the partition is sized to occupy the full disk.
 
