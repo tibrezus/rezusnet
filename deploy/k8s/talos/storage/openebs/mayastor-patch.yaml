@@ -6,14 +6,3 @@
   path: /machine/nodeLabels
   value:
     openebs.io/engine: mayastor
-
-- op: add
-  path: /machine/kubelet/extraMounts
-  value:
-    - destination: /var/local
-      type: bind
-      source: /var/local
-      options:
-        - bind
-        - rshared
-        - rw
