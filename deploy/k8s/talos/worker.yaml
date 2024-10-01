@@ -4,10 +4,10 @@ persist: true
 # Provides machine specific configuration options.
 machine:
     type: worker # Defines the role of the machine within the cluster.
-    token: z77bem.a9r9vtlltje0ts2g # The `token` is used by a machine to join the PKI of the cluster.
+    token: 7ppc0p.sw7s0gmggf1yu1fb # The `token` is used by a machine to join the PKI of the cluster.
     # The root certificate authority of the PKI.
     ca:
-        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQakNCOGFBREFnRUNBaEE0MXBJYnduVWZFOUExYU1QTytEWlVNQVVHQXl0bGNEQVFNUTR3REFZRFZRUUsKRXdWMFlXeHZjekFlRncweU5EQTVNamN4T0RNMk1EVmFGdzB6TkRBNU1qVXhPRE0yTURWYU1CQXhEakFNQmdOVgpCQW9UQlhSaGJHOXpNQ293QlFZREsyVndBeUVBSmRjLzJXVUdYaC9xTnBsWnQ3QTI1UDJtek55eFJKRWgrNDB0ClM5QkJWTTZqWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDaERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUkKS3dZQkJRVUhBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVd083NUNsS3drNERpSDhCNApRRUw3aHl3bCt5SXdCUVlESzJWd0EwRUFHeXd2eVhHV0NMa3IzQVY1OFErSzRjWXNmZmtMcHRBN2pVYWNhamRGCmxtendLNG1LVFVlSEdiU0VKS25kd1dnLzJKT09qM1Y3cGdxNXVoc2wzV0g3Q3c9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQakNCOGFBREFnRUNBaEFSSldiRzFsVGV1ekl5YUhCbHIzK3BNQVVHQXl0bGNEQVFNUTR3REFZRFZRUUsKRXdWMFlXeHZjekFlRncweU5ERXdNREV4TmpFeE5EaGFGdzB6TkRBNU1qa3hOakV4TkRoYU1CQXhEakFNQmdOVgpCQW9UQlhSaGJHOXpNQ293QlFZREsyVndBeUVBZzZwZHdyUlZ5N0M3WlVVY3ZlTHZMUTM0RFpzS2FlVG5DVWhWCjd0cDZjeW1qWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDaERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUkKS3dZQkJRVUhBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVQWJNNDlzU2tBNUNIV1U1bQp2MFduQS8wdkRCb3dCUVlESzJWd0EwRUFWN0NHZ1Y2Z3pCWC9LMkpmMVI5bW9TVnFlVThqMDVLemR5dkNJSExtCmpaa1NUcVE1M0tRSSt4TG8yUk5TVUNtb3pPUG5qZWpOSlZJc3M0NXphTnJQQmc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
         key: ""
     # Extra certificate subject alternative names for the machine's certificate.
     certSANs: []
@@ -424,8 +424,8 @@ machine:
     #     exampleTaint: exampleTaintValue:NoSchedule
 # Provides cluster specific configuration options.
 cluster:
-    id: SowkkUscxWg9YO5k7OeV0uBHvEO2jaKBreRAgJ1XujA= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
-    secret: +KqBtR2mH34MZaXqYcIRNsGRIE21N4AY105URrxeldc= # Shared secret of cluster (base64 encoded random 32 bytes).
+    id: U3mEa_Q3Q0Ey4mQwl8gKAKChZCZT-5GzRtNYHfxG_EM= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
+    secret: QOzqIT8eCgBgZhL1pHmydwSOB69TRehHL/vgCPX1mAk= # Shared secret of cluster (base64 encoded random 32 bytes).
     # Provides control plane specific configuration options.
     controlPlane:
         endpoint: https://192.168.7.200:6443 # Endpoint is the canonical controlplane endpoint, which can be an IP address or a DNS hostname.
@@ -439,14 +439,22 @@ cluster:
         # The pod subnet CIDR.
         podSubnets:
             - 10.244.0.0/16
+            - fd00:10:244::/56
         # The service subnet CIDR.
         serviceSubnets:
             - 10.96.0.0/12
-    token: 7xvq81.o1695ek7ndu71h0o # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
+            - fd00:10:96::/112
+    token: j8zs3o.ql4fv8z26kcqhpay # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
     # The base64 encoded root certificate authority used by Kubernetes.
     ca:
-        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpRENDQVMrZ0F3SUJBZ0lRWGZWbXRoME5hSnlZY3lkdGRQYTcrREFLQmdncWhrak9QUVFEQWpBVk1STXcKRVFZRFZRUUtFd3ByZFdKbGNtNWxkR1Z6TUI0WERUSTBNRGt5TnpFNE16WXdOVm9YRFRNME1Ea3lOVEU0TXpZdwpOVm93RlRFVE1CRUdBMVVFQ2hNS2EzVmlaWEp1WlhSbGN6QlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VICkEwSUFCTzkrV3MrZk1PUFRDc1NnRldyZUxEdkk4alNwKzFreGxVWUhIeGNsYmRrRnZhZkk0KzhDYXhpY1M5UisKWWZWcGlpM1B5NSt1S1gxeWZDUVU0cXNnTGRXallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWRCZ05WSFNVRQpGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFCkZnUVVOZTN6Ri9DRy8rVWVIYmlFcVJzVllpWGpQMXd3Q2dZSUtvWkl6ajBFQXdJRFJ3QXdSQUlnWVZrc1VMOWsKQ3NvODZXNEVKbDBVT1gvUzR2M0x0eUFOc05VQVhSLy9yMzhDSUdxVkNmMUdtakNBdndhNkY1NTNLVnMvbnBmNApjZjBTUnNvSFlndVo5NEJlCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpRENDQVMrZ0F3SUJBZ0lRSDhDNEdkaEJsMHQ5RVE2eGk4STduekFLQmdncWhrak9QUVFEQWpBVk1STXcKRVFZRFZRUUtFd3ByZFdKbGNtNWxkR1Z6TUI0WERUSTBNVEF3TVRFMk1URTBPRm9YRFRNME1Ea3lPVEUyTVRFMApPRm93RlRFVE1CRUdBMVVFQ2hNS2EzVmlaWEp1WlhSbGN6QlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VICkEwSUFCQ2gwUHhQSXQ5a1prZCtRaGVBVnpNdWtLM1pSN1ZaZmx0ZC9PaFVrRGtEdWVwclp5UFdVczJNOGl3UVMKanpVdEViejJMNG1LdFd0Uk1veGdPVmorZUthallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWRCZ05WSFNVRQpGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFCkZnUVUxYU9EUElGRVZOM2V1Z3lRMDliWVZVaThWOXN3Q2dZSUtvWkl6ajBFQXdJRFJ3QXdSQUlnTjIrOUNxR3EKc2tGVjRmRWtUbUU5U3htUEdGNFVDSzBtNmNYdENpeHAvQkVDSURwejZPdW0wWEdIaW5nK1dqUXVmanlucU5hZgpXL1JIUWl4ckJidXN6aGNjCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
         key: ""
+    # Kube-proxy server-specific configuration options
+    proxy:
+        disabled: true # Disable kube-proxy deployment on cluster bootstrap.
+        
+        # # The container image used in the kube-proxy manifest.
+        # image: registry.k8s.io/kube-proxy:v1.31.1
     # Configures cluster member discovery.
     discovery:
         enabled: true # Enable the cluster membership discovery feature.
@@ -527,15 +535,6 @@ cluster:
     #     # Extra arguments to supply to the controller manager.
     #     extraArgs:
     #         feature-gates: ServerSideApply=true
-
-    # # Kube-proxy server-specific configuration options
-    # proxy:
-    #     disabled: false # Disable kube-proxy deployment on cluster bootstrap.
-    #     image: registry.k8s.io/kube-proxy:v1.31.1 # The container image used in the kube-proxy manifest.
-    #     mode: ipvs # proxy mode of kube-proxy.
-    #     # Extra arguments to supply to kube-proxy.
-    #     extraArgs:
-    #         proxy-mode: iptables
 
     # # Scheduler server specific configuration options.
     # scheduler:
