@@ -35,9 +35,9 @@ func handleGetUserProfile(id int) (*UserProfile, error) {
 		wg     = &sync.WaitGroup{}
 	)
 	// we are doing 3 request inside their own goroutine
-	go getComments(id, respch, wg)
-	go getLikes(id, respch, wg)
-	go getFriends(id, respch, wg)
+	go getComments(respch, wg)
+	go getLikes(respch, wg)
+	go getFriends(respch, wg)
 	// adding 3 to the waitgroup
 	wg.Add(3)
 	wg.Wait() // block until the wg counter == 0 we unblock
@@ -61,7 +61,7 @@ func handleGetUserProfile(id int) (*UserProfile, error) {
 	return userProfile, nil
 }
 
-func getComments(id int, respch chan Response, wg *sync.WaitGroup) {
+func getComments(respch chan Response, wg *sync.WaitGroup) {
 	time.Sleep(time.Millisecond * 200)
 	comments := []string{
 		"Hey, that was great",
@@ -76,7 +76,7 @@ func getComments(id int, respch chan Response, wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func getLikes(id int, respch chan Response, wg *sync.WaitGroup) {
+func getLikes(respch chan Response, wg *sync.WaitGroup) {
 	time.Sleep(time.Millisecond * 200)
 	respch <- Response{
 		data: 11,
@@ -86,7 +86,7 @@ func getLikes(id int, respch chan Response, wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func getFriends(id int, respch chan Response, wg *sync.WaitGroup) {
+func getFriends(respch chan Response, wg *sync.WaitGroup) {
 	time.Sleep(time.Millisecond * 100)
 	friendIds := []int{11, 34, 854, 455}
 	respch <- Response{
