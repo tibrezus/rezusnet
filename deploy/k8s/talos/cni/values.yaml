@@ -1,0 +1,82 @@
+ipam:
+  mode: kubernetes
+
+kubeProxyReplacement: "strict"
+k8sServiceHost: "localhost"
+k8sServicePort: 7445
+
+tunnel: disabled
+autoDirectNodeRoutes: true
+
+ipv4:
+  enabled: true
+
+ipv6:
+  enabled: true
+
+# From the node configuration
+ipv6NativeRoutingCIDR: "fd00:10:244::/56"
+
+cni:
+  exclusive: true
+
+enableIPv4Masquerade: true
+enableIPv6Masquerade: true
+
+bpf:
+  masquerade: true
+
+securityContext:
+  capabilities:
+    ciliumAgent:
+      - CHOWN
+      - KILL
+      - NET_ADMIN
+      - NET_RAW
+      - IPC_LOCK
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    cleanCiliumState:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RESOURCE
+
+cgroup:
+  autoMount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup
+
+hostServices:
+  enabled: true
+
+nodePort:
+  enabled: true
+
+hostPort:
+  enabled: true
+
+externalIPs:
+  enabled: true
+
+hubble:
+  enabled: true
+  metrics:
+    enabled:
+      - dns:query;ignoreAAAA
+      - drop
+      - tcp
+      - flow
+      - icmp
+      - http
+
+operator:
+  replicas: 1
+
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
