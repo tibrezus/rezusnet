@@ -1,30 +1,10 @@
 ipam:
   mode: kubernetes
 
-kubeProxyReplacement: "strict"
+kubeProxyReplacement: true
+
 k8sServiceHost: "localhost"
 k8sServicePort: 7445
-
-tunnel: disabled
-autoDirectNodeRoutes: true
-
-ipv4:
-  enabled: true
-
-ipv6:
-  enabled: true
-
-# From the node configuration
-ipv6NativeRoutingCIDR: "fd00:10:244::/56"
-
-cni:
-  exclusive: true
-
-enableIPv4Masquerade: true
-enableIPv6Masquerade: true
-
-bpf:
-  masquerade: true
 
 securityContext:
   capabilities:
@@ -48,35 +28,29 @@ securityContext:
 cgroup:
   autoMount:
     enabled: false
-  hostRoot: /sys/fs/cgroup
+  hostRoot: "/sys/fs/cgroup"
 
-hostServices:
+# IPv6 and Dual-Stack Configuration
+ipv4:
   enabled: true
 
-nodePort:
+ipv6:
   enabled: true
+  nativeRoutingCIDR: "fd00:10:244::/56"
 
-hostPort:
+autoDirectNodeRoutes: true
+
+tunnel: disabled
+
+cni:
+  exclusive: true
+
+enableIPv4Masquerade: true
+enableIPv6Masquerade: true
+
+bpf:
+  masquerade: true
+
+# Optional Dual-Stack Settings
+dualStack:
   enabled: true
-
-externalIPs:
-  enabled: true
-
-hubble:
-  enabled: true
-  metrics:
-    enabled:
-      - dns:query;ignoreAAAA
-      - drop
-      - tcp
-      - flow
-      - icmp
-      - http
-
-operator:
-  replicas: 1
-
-prometheus:
-  enabled: true
-  serviceMonitor:
-    enabled: true
