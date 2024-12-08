@@ -40,8 +40,6 @@ ipv6:
 
 autoDirectNodeRoutes: true
 
-tunnel: disabled
-
 cni:
   exclusive: true
 
