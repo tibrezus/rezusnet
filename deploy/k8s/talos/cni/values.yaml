@@ -1,11 +1,22 @@
+# Base Configuration
 ipam:
   mode: kubernetes
 
 kubeProxyReplacement: true
-
 k8sServiceHost: "localhost"
 k8sServicePort: 7445
 
+# Routing Configuration
+routing:
+  mode: "native"
+
+# CNI Configuration
+cni:
+  exclusive: true
+  install: true
+  chainingMode: none
+
+# Security Context
 securityContext:
   capabilities:
     ciliumAgent:
@@ -25,12 +36,7 @@ securityContext:
       - SYS_ADMIN
       - SYS_RESOURCE
 
-cgroup:
-  autoMount:
-    enabled: false
-  hostRoot: "/sys/fs/cgroup"
-
-# IPv6 and Dual-Stack Configuration
+# Dual-stack Configuration
 ipv4:
   enabled: true
 
@@ -38,17 +44,32 @@ ipv6:
   enabled: true
   nativeRoutingCIDR: "fd00:10:244::/56"
 
-autoDirectNodeRoutes: true
+dualStack:
+  enabled: true
 
-cni:
-  exclusive: true
+# Node Configuration
+nodePort:
+  enabled: true
+  enableIPv6: true
 
+# BPF and Masquerading
+bpf:
+  masquerade: true
+  hostLegacyRouting: false
+
+# Masquerading
 enableIPv4Masquerade: true
 enableIPv6Masquerade: true
 
-bpf:
-  masquerade: true
+# Tolerations
+tolerations:
+  - operator: Exists
 
-# Optional Dual-Stack Settings
-dualStack:
+# Monitoring
+monitor:
   enabled: true
+
+# Debug
+debug:
+  enabled: true
+  verbose: "flow"
