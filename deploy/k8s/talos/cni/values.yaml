@@ -16,6 +16,10 @@ cni:
   install: true
   chainingMode: none
 
+operator:
+  replicas: 1
+  rolloutPods: true
+
 # Security Context
 securityContext:
   capabilities:
